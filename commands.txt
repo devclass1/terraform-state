@@ -1,0 +1,50 @@
+git clone https://github.com/devclass1/terraform-state.git
+ls -la
+cd terraform-state/
+terraform init
+terraform apply
+terraform show
+terraform state list
+
+#Replace a resource with CLI
+terraform plan -replace="aws_instance.example"
+terraform apply -replace="aws_instance.example"
+
+#Move a resource to a different state file
+cd new_state
+cp ../terraform.tfvars .
+terraform init
+terraform apply
+terraform state mv -state-out=../terraform.tfstate aws_instance.example_new aws_instance.example_new
+cd ..
+terraform state list
+terraform apply
+terraform state list
+cd new_state
+terraform destroy
+
+#Remove a resource from state
+cd ..
+terraform state rm aws_security_group.sg_8080
+terraform state list
+terraform import aws_security_group.sg_8080 $(terraform output -raw security_group)
+
+#Refresh modified infrastructure
+aws ec2 terminate-instances --instance-ids $(terraform output -raw instance_id)
+terraform refresh
+terraform state list
+terraform plan
+######
+Remove the aws_instance resource, and public_ip and instance_id outputs from your main.tf file. 
+This will prevent Terraform from recreating the resource in future Terraform operations.
+######
+terraform apply
+
+#Destroy your infrastructure
+terraform destroy
+terraform show
+
+#####
+Open the terraform.tfstate file in your file editor. The empty resources attribute confirms Terraform destroyed all your previous resources.
+#########
+
