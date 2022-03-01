@@ -1,16 +1,13 @@
 terraform {
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.24.1"
+    awscc = {
+      source  = "hashicorp/awscc"
+      version = "~> 0.1"
     }
   }
-  required_version = ">= 0.15.2"
+  required_version = ">= 0.14.9"
 }
-
-variable "region" {
-  description = "The AWS region your resources will be deployed"
-}
+ 
 provider "aws" {
   region = var.region
 }
